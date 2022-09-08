@@ -1,15 +1,29 @@
-
 <!DOCTYPE html>
 <html>
+<meta charset="UTF-8">
+<title>Asteroids</title>
+<style>
+    h1 {
+        display: flex;
+        justify-content: center;
+        font-family: "Century Gothic"
 
-<head>
-    <meta charset="UTF-8">
-    <title>Asteroids</title>
-    <style></style>
-</head>
+    }
 
-<body>
-    <canvas id="gameCanvas" width="760" height="570"></canvas>
+    canvas {
+        border-radius: 30px;
+        display: flex;
+        justify-content: center;
+
+    }
+</style>
+
+<h1>Asteroids</h1>
+
+<body style="background-color: red;">
+
+    <canvas id="gameCanvas" width="1260" height="500"></canvas>
+
     <script>
         const FPS = 30; // frames per second
         const FRICTION = 0.7; // friction coefficient of space (0 = no friction, 1 = lots of friction)
@@ -49,7 +63,7 @@
         var fxHit = new Sound("sounds/hit.m4a", 5);
         var fxLaser = new Sound("sounds/laser.m4a", 5, 0.5);
         var fxThrust = new Sound("sounds/thrust.m4a");
-        
+
         // set up the music
         var music = new Music("sounds/music-low.m4a", "sounds/music-high.m4a");
         var roidsLeft, roidsTotal;
@@ -160,7 +174,7 @@
                 return;
             }
 
-            switch(ev.keyCode) {
+            switch (ev.keyCode) {
                 case 32: // space bar (shoot laser)
                     shootLaser();
                     break;
@@ -182,7 +196,7 @@
                 return;
             }
 
-            switch(ev.keyCode) {
+            switch (ev.keyCode) {
                 case 32: // space bar (allow shooting again)
                     ship.canShoot = true;
                     break;
@@ -239,7 +253,7 @@
         function newLevel() {
             music.setAsteroidRatio(1);
             text = "Level " + (level + 1);
-            textAlpha = 1.0;
+            textAlpha = 2.0;
             createAsteroidBelt();
         }
 
@@ -289,7 +303,7 @@
             this.tempo = 1.0; // seconds per beat
             this.beatTime = 0; // frames left until next beat
 
-            this.play = function() {
+            this.play = function () {
                 if (MUSIC_ON) {
                     if (this.low) {
                         this.soundLow.play();
@@ -300,11 +314,11 @@
                 }
             }
 
-            this.setAsteroidRatio = function(ratio) {
+            this.setAsteroidRatio = function (ratio) {
                 this.tempo = 1.0 - 0.75 * (1.0 - ratio);
             }
 
-            this.tick = function() {
+            this.tick = function () {
                 if (this.beatTime == 0) {
                     this.play();
                     this.beatTime = Math.ceil(this.tempo * FPS);
@@ -322,14 +336,14 @@
                 this.streams[i].volume = vol;
             }
 
-            this.play = function() {
+            this.play = function () {
                 if (SOUND_ON) {
                     this.streamNum = (this.streamNum + 1) % maxStreams;
                     this.streams[this.streamNum].play();
                 }
             }
 
-            this.stop = function() {
+            this.stop = function () {
                 this.streams[this.streamNum].pause();
                 this.streams[this.streamNum].currentTime = 0;
             }
@@ -359,7 +373,7 @@
                 y = roids[i].y;
                 offs = roids[i].offs;
                 vert = roids[i].vert;
-                
+
                 // draw the path
                 ctx.beginPath();
                 ctx.moveTo(
@@ -385,7 +399,7 @@
                     ctx.stroke();
                 }
             }
-            
+
             // thrust the ship
             if (ship.thrusting && !ship.dead) {
                 ship.thrust.x += SHIP_THRUST * Math.cos(ship.a) / FPS;
@@ -420,7 +434,7 @@
                 ship.thrust.y -= FRICTION * ship.thrust.y / FPS;
                 fxThrust.stop();
             }
-            
+
             // draw the triangular ship
             if (!exploding) {
                 if (blinkOn && !ship.dead) {
@@ -470,7 +484,7 @@
                 ctx.arc(ship.x, ship.y, ship.r, 0, Math.PI * 2, false);
                 ctx.stroke();
             }
-            
+
             // show ship's centre dot
             if (SHOW_CENTRE_DOT) {
                 ctx.fillStyle = "red";
@@ -611,7 +625,7 @@
 
             // move the lasers
             for (var i = ship.lasers.length - 1; i >= 0; i--) {
-                
+
                 // check distance travelled
                 if (ship.lasers[i].dist > LASER_DIST * canv.width) {
                     ship.lasers.splice(i, 1);
